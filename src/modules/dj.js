@@ -7,7 +7,8 @@
 import { UI } from './ui.js';
 
 export function initDJ(Tone) {
-  let crossfade, master, masterMeter;
+  // Central mixer nodes (created in initMixer once both decks exist).
+  let crossfade, master;
   const decks = { A: null, B: null };
   const tapTimes = [];
   let fxTarget = 'A';
@@ -416,14 +417,12 @@ export function initDJ(Tone) {
   }
 
   function initMixer() {
+    // Equal-power crossfade → master volume → speakers.
     master = new Tone.Volume(-6);
-    masterMeter = new Tone.Meter({ smoothing: 0.85 });
     crossfade = new Tone.CrossFade(0.5);
-
     decks.A.volume.connect(crossfade.a);
     decks.B.volume.connect(crossfade.b);
     crossfade.connect(master);
-    master.connect(masterMeter);
     master.toDestination();
   }
 

@@ -3,11 +3,17 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "NEON.LAB — Cyberpunk Web Audio synthesizer & dual-deck DJ mashup rig (Vite + Tone.js)",
+  "description": "NEON.LAB — Cyberpunk Web Audio synthesizer & dual-deck DJ mashup rig (Vite + Tone.js).",
+  "keywords": ["web-audio", "tone.js", "synthesizer", "dj", "vite"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0 --port 4173"
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "clean": "rm -rf dist node_modules/.vite"
   },
   "dependencies": {
     "tone": "^14.8.49"

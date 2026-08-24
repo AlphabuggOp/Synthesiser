@@ -1,60 +1,83 @@
-# NEON.LAB — Web Audio Synth & DJ Mashup Station
+# NEON.LAB
 
-A browser-based, cyberpunk-themed audio workstation built with **Vite + Tone.js + Tailwind**. Two tabs:
+> Cyberpunk **Web Audio synthesizer** & **dual-deck DJ mashup rig** — built with Vite, Tone.js, and Tailwind.
 
-1. **Synthesizer Deck** — 2-octave polyphonic playable keyboard, oscillator selector, ADSR envelope, reverb / delay / low-pass filter, real-time VU meter and waveform scope.
-2. **DJ Mashup Rig** — Dual decks with drop-to-load, waveform + spinning vinyl, ±16% pitch, 3-band EQ, hot cues, loops, tap tempo, beat sync, and momentary FX pads (Stutter / Filter Sweep / Bitcrusher). Includes 4 synthesized demo loops so it works immediately with no uploads.
+Two tabs, one browser tab:
 
-## Run locally
+- **Synth Deck** — 2-octave polyphonic playable keyboard, oscillator selector, ADSR envelope, reverb / delay / low-pass filter, real-time VU meter and mini oscilloscope.
+- **DJ Rig** — Dual decks with drop-to-load, waveform + spinning vinyl, ±16 % pitch, 3-band EQ, hot cues, beat-quantized loops, tap tempo, beat sync, and momentary FX pads (Stutter / Filter Sweep / Bitcrusher). 4 synthesized demo loops ship built-in so both decks work with zero uploads.
+
+---
+
+## Quick start
 
 ```bash
 npm install
 npm run dev       # http://localhost:5173
 ```
 
-## Build & preview
+## Production build
 
 ```bash
 npm run build     # emits ./dist
-npm run preview   # serves dist on :4173
+npm run preview   # serves ./dist on :4173
 ```
 
 ## Deploy to Vercel
 
-This is a **Vite** project — Vercel autodetects it (`vercel.json` also pins framework, build command, and output directory).
+This is a **Vite** project. Vercel autodetects it; `vercel.json` also pins the framework, build command, and output directory so no manual project settings are needed.
 
-- Framework: **Vite**
-- Build command: `npm run build`
-- Output directory: `dist`
-- Install command: `npm install`
+| Setting | Value |
+| --- | --- |
+| Framework | Vite |
+| Install command | `npm install` |
+| Build command | `npm run build` |
+| Output directory | `dist` |
 
-Push to GitHub and import the repo into Vercel — that's it, no other config needed. (Vercel serves the built `dist/` folder, not the raw source `index.html`; that's why the previous CDN-based version was returning 404.)
+Just push the repo and click Import in Vercel.
+
+---
 
 ## Controls
 
-### Synth
-- **Keys** `A S D F G H J` → C4 D4 E4 F4 G4 A4 B4 (octave ±1 buttons transpose)
-- Click / touch the on-screen keys (whites + blacks)
+### Synth tab
 
-### DJ
-- `Q` / `P` — Deck A / Deck B play–pause
-- `Space` — Tap tempo
-- `1`/`2`/`3` — Deck A cues, `8`/`9`/`0` — Deck B cues
-- `Z`/`X`/`C` — Stutter / Filter Sweep / Bitcrusher (momentary while held)
-- Right-click a hot-cue button to clear it
-- Drag audio files onto the vinyl to load a track
+| Input | Action |
+| --- | --- |
+| `A S D F G H J` | C4 D4 E4 F4 G4 A4 B4 |
+| Octave −1 / 0 / +1 buttons | Transpose the playable range |
+| Click / touch on the on-screen keys | Play whites + blacks |
+
+### DJ tab
+
+| Input | Action |
+| --- | --- |
+| `Q` / `P` | Deck A / Deck B play–pause |
+| `Space` | Tap tempo |
+| `1` `2` `3` | Deck A hot cues 1–3 |
+| `8` `9` `0` | Deck B hot cues 1–3 |
+| `Z` `X` `C` | Stutter / Filter Sweep / Bitcrusher (momentary) |
+| Right-click a cue button | Clear cue |
+| Drag file onto the vinyl | Load a track |
+| Click on the waveform | Jump to that position |
+
+---
 
 ## File layout
 
 ```
-index.html                  # Vite entry (references /src/main.js)
+index.html                  Vite entry, references /src/main.js
 src/
-  main.js                   # Bootstrap: unlock audio, mount modules
-  styles.css                # Cyberpunk / glassmorphism theme
-  modules/ui.js             # Tabs, clock, rotary knob interaction
-  modules/synth.js          # Poly synth audio graph + keyboard
-  modules/dj.js             # Dual decks, mixer, FX, demo-loop generator
-package.json                # npm scripts + Tone.js dependency
-vite.config.js              # Vite dev/build config (host, port, dist)
-vercel.json                 # Vercel deploy config
+  main.js                   Bootstrap: unlock audio, mount modules
+  styles.css                Cyberpunk / glassmorphism theme
+  modules/ui.js             Tabs, clock, rotary-knob interaction
+  modules/synth.js          Poly synth signal chain + keyboard
+  modules/dj.js             Dual decks, mixer, FX, demo-loop generator
+package.json                npm scripts + Tone.js dependency
+vite.config.js              Vite dev/build config (host, port, dist)
+vercel.json                 Vercel deploy config
 ```
+
+## License
+
+MIT — see [`LICENSE`](./LICENSE).
