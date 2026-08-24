@@ -1,38 +1,43 @@
 /* =========================================================
    main.js — Vite entry point.
-   Imports Tone from node_modules, wires up shared UI helpers,
-   then boots the synth & DJ modules once the user unlocks audio.
+   Renders the app shell from JS, then boots synth & DJ modules
+   once the user unlocks the AudioContext via a gesture.
    ========================================================= */
 
 import * as Tone from 'tone';
+import './styles.css';
+import { renderShell } from './template.js';
 import { UI } from './modules/ui.js';
 import { initSynth } from './modules/synth.js';
 import { initDJ } from './modules/dj.js';
 
-// Expose Tone globally for the modules (they consume it via a shared reference).
+// Expose Tone for convenience (also for debugging in the browser console).
 window.Tone = Tone;
 
-UI.initTabs();
-UI.initClock();
+(async function bootstrap() {
+  await renderShell();
 
-const splash = document.getElementById('splash');
-const enterBtn = document.getElementById('enterBtn');
+  UI.initTabs();
+  UI.initClock();
 
-enterBtn.addEventListener('click', async () => {
-  try {
-    // Unlock the AudioContext via user gesture (all modern browsers require this).
-    await Tone.start();
-    // Tighter latency without underruns on desktop.
-    Tone.getContext().lookAhead = 0.03;
+  const splash = document.getElementById('splash');
+  const enterBtn = document.getElementById('enterBtn');
 
-    initSynth(Tone);
-    initDJ(Tone);
+  enterBtn.addEventListener('click', async () => {
+    try {
+      // AudioContext requires a user gesture in every modern browser.
+      await Tone.start();
+      Tone.getContext().lookAhead = 0.03;
 
-    splash.style.opacity = '0';
-    splash.style.transition = 'opacity .35s ease';
-    setTimeout(() => splash.remove(), 350);
-  } catch (err) {
-    console.error('Audio init failed', err);
-    alert('Could not start the audio engine: ' + err.message);
-  }
-});
+      initSynth(Tone);
+      initDJ(Tone);
+
+      splash.style.opacity = '0';
+      splash.style.transition = 'opacity .35s ease';
+      setTimeout(() => splash.remove(), 350);
+    } catch (err) {
+      console.error('Audio init failed', err);
+      alert('Could not start the audio engine: ' + err.message);
+    }
+  });
+})();

@@ -1,6 +1,6 @@
 # NEON.LAB
 
-> Cyberpunk **Web Audio synthesizer** & **dual-deck DJ mashup rig** — built with Vite, Tone.js, and Tailwind.
+> Cyberpunk **Web Audio synthesizer** & **dual-deck DJ mashup rig** — built with **Vite + Tailwind + Tone.js**. The entire UI is rendered from JavaScript; `index.html` is a 10-line stub whose only job is to load the JS bundle.
 
 Two tabs, one browser tab:
 
@@ -25,16 +25,19 @@ npm run preview   # serves ./dist on :4173
 
 ## Deploy to Vercel
 
-This is a **Vite** project. Vercel autodetects it; `vercel.json` also pins the framework, build command, and output directory so no manual project settings are needed.
+This is a **zero-config Vite project**. Import the repo and click Deploy — that's it. Vercel automatically:
 
-| Setting | Value |
-| --- | --- |
-| Framework | Vite |
-| Install command | `npm install` |
-| Build command | `npm run build` |
-| Output directory | `dist` |
+| Setting            | Auto-detected value |
+| ------------------ | ------------------- |
+| Framework preset   | **Vite**            |
+| Install command    | `npm install`       |
+| Build command      | `npm run build`     |
+| Output directory   | `dist`              |
 
-Just push the repo and click Import in Vercel.
+**If Vercel returns "NOT_FOUND" after deploy**, it's almost always one of these:
+1. **Wrong Root Directory** — in Vercel → Project → Settings → General, "Root Directory" must be blank (or `.`), not `dist/` or `src/`.
+2. **Framework preset overridden** — leave "Framework Preset" set to **Vite** (Vercel picks it automatically from `package.json`).
+3. **A stale `vercel.json`** — this repo intentionally ships **no `vercel.json`** so Vercel's zero-config detection isn't overridden. If you add one back, make sure `outputDirectory` is `dist`.
 
 ---
 
@@ -66,17 +69,21 @@ Just push the repo and click Import in Vercel.
 ## File layout
 
 ```
-index.html                  Vite entry, references /src/main.js
+index.html                  10-line Vite entry — loads /src/main.js
 src/
-  main.js                   Bootstrap: unlock audio, mount modules
+  main.js                   Bootstrap: renderShell → unlock audio → mount modules
+  template.js               Renders the whole UI from JavaScript (no HTML content)
   styles.css                Cyberpunk / glassmorphism theme
   modules/ui.js             Tabs, clock, rotary-knob interaction
   modules/synth.js          Poly synth signal chain + keyboard
   modules/dj.js             Dual decks, mixer, FX, demo-loop generator
 package.json                npm scripts + Tone.js dependency
-vite.config.js              Vite dev/build config (host, port, dist)
-vercel.json                 Vercel deploy config
+vite.config.js              Vite dev/build config
 ```
+
+## Why not C++ ?
+
+Browsers only execute JavaScript and WebAssembly. C++ can be compiled to WASM via Emscripten and loaded into an `AudioWorkletProcessor`, but that adds a native toolchain to the build (and Vercel's default build image doesn't have Emscripten). The Web Audio API already ships every DSP primitive we need, so this project stays in pure JS + Tone.js.
 
 ## License
 
