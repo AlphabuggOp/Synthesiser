@@ -11,8 +11,8 @@ import { UI } from './modules/ui.js';
 import { initSynth } from './modules/synth.js';
 import { initDJ } from './modules/dj.js';
 
-// Expose Tone for convenience (also for debugging in the browser console).
-window.Tone = Tone;
+// Expose Tone in dev only so debug sessions can inspect the graph.
+if (import.meta.env.DEV) window.Tone = Tone;
 
 (async function bootstrap() {
   await renderShell();
