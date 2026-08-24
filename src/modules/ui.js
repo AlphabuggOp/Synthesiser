@@ -1,16 +1,12 @@
 /* =========================================================
-   ui.js — Shared UI helpers: tabs, clock, splash, knobs
+   ui.js — Shared UI helpers: tabs, clock, rotary knobs.
    ========================================================= */
 
-const UI = (() => {
-  /** Clamp helper */
+export const UI = (() => {
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-
-  /** Map a value from one range to another */
   const mapRange = (v, inMin, inMax, outMin, outMax) =>
     outMin + ((v - inMin) / (inMax - inMin)) * (outMax - outMin);
 
-  /** Tabs */
   function initTabs() {
     const buttons = document.querySelectorAll('.tab-btn');
     buttons.forEach((btn) => {
@@ -24,7 +20,6 @@ const UI = (() => {
     });
   }
 
-  /** Live clock */
   function initClock() {
     const el = document.getElementById('clock');
     if (!el) return;
@@ -37,15 +32,13 @@ const UI = (() => {
   }
 
   /**
-   * Attach a rotary knob interaction to a .knob element.
-   * Drag vertically or use mouse wheel to change value in [min,max].
-   * onChange(value) is called with the current value; visual rotation is applied automatically.
+   * Rotary-knob interaction: drag vertically or scroll wheel to change value in [min,max].
+   * Double-click resets to center.
    */
   function attachKnob(el, { min = -12, max = 12, value = 0, onChange = () => {} } = {}) {
     let current = clamp(value, min, max);
     const indicator = el.querySelector('.knob-indicator');
     const render = () => {
-      // Rotate from -135deg to +135deg over full range
       const deg = mapRange(current, min, max, -135, 135);
       indicator.style.transform = `translateX(-50%) rotate(${deg}deg)`;
     };
@@ -65,8 +58,7 @@ const UI = (() => {
     const onMove = (e) => {
       if (!dragging) return;
       const y = (e.touches ? e.touches[0].clientY : e.clientY);
-      const dy = startY - y; // up = increase
-      // 200px full sweep
+      const dy = startY - y;
       current = clamp(startVal + (dy / 200) * (max - min), min, max);
       render();
       onChange(current);
